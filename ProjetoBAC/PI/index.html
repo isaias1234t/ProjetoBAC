@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buscou Achou Comprou</title>
+  <link rel="icon" type="image/png" href="/imagenspi/BAC_LOGO.PNG.jpg">
+  <link rel="stylesheet" href="styles/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"  rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
+</head>
+<body>
+
+
+  <div class="sidebar" id="sidebar">
+  <div class ="voltar" onclick="toggleSidebar()">✖</div>
+    <h3>Menu</h3>
+  <ul class="nav nav-tabs flex-column" role="tablist">
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Promoções">Promoções</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Cadastro">Cadastro Pessoal</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Grafico">Gráfico</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Localização">Nossa Localização</a></li>
+  </ul>
+  </div>
+  
+  <header>
+    <img src="/imagenspi/BAC_LOGO.PNG.jpg" style="max-width: 50px;">
+    <div class="menu-btn" onclick="toggleSidebar()">☰</div>
+    <div class="logo"></div>
+    <button class="layout-toggle" onclick="toggleLayout()">🔁 Layout</button>
+    <div class="cart-counter" id="cartCount" onclick="toggleCart()">🛒 0</div>
+    <div class="cart-sidebar" id="cartSidebar" style="display:none; position:fixed; top:0; right:0; width:350px; height:100%; background:#fff; box-shadow:-2px 0 8px rgba(0,0,0,0.2); z-index:1050; padding:20px; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h4>Carrinho</h4>
+      <button onclick="toggleCart()" style="border:none; background:none; font-size:1.5rem;">✖</button>
+      </div>
+      <ul id="cartItems" style="list-style:none; padding:0; margin:20px 0;"></ul>
+      <div id="cartTotal" style="font-weight:bold; margin-bottom:20px;">Total: R$ 0,00</div>
+      <button class="btn btn-success w-100" onclick="finalizarCompra()">Finalizar Compra</button>
+    </div>
+  </header>
+  
+  <div class="categories" id="categories">
+    <div class="category" data-category="Todos">
+      <img src="https://www.institutoacervo.org.br/wp-content/uploads/2020/05/venda.jpg">
+      Todos
+    </div>
+    <div class="category" data-category="Frutas">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwfG11tNZB9J65uXVqy7kA84yyKjb-jQMR5w&s" alt="Frutas" />
+      Frutas
+    </div>
+    <div class="category" data-category="Frios">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4ELdXIsC5seuMSwaEVUIKDbYfUDbhDOfChA&s" alt="Frios"/>
+      Frios
+    </div>
+    <div class="category" data-category="Padaria">
+      <img src="https://invexo.com.br/blog/wp-content/uploads/2022/10/paes-padarias-copacabana-rio-de-janeiro.jpg" alt="Padaria"/>
+      Padaria
+    </div>
+    <div class="category" data-category="Bebidas">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEV4954PzLymEeHO5MGppy6A6e01zOrQOnXg&s" alt="Bebidas" />
+      Bebidas
+    </div>
+    <div class="category" data-category="Limpeza">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8Xaffw0hX2Rhr19l_XAfy45Grt9J2GOmtlg&s" alt="Limpeza" />
+        Limpeza
+  </div>
+    <div class="category" data-category="Higiene">
+      <img src="https://media.istockphoto.com/id/517305186/pt/foto/sab%C3%B5es-e-esponja.jpg?s=612x612&w=0&k=20&c=ROSrkDdA5R9_la-iIDMo0_i1_rIMo7zfU9Xe_7jcdN8=" alt="Higiene"/>
+      Higiene 
+    </div>
+    <div class="category" data-category="Outros">
+      <img src="https://cobrirel.com.br/wp-content/uploads/2023/10/produtos-de-utilidades-domesticas-1.png" />
+      Outros 
+    </div>
+  </div>
+
+
+<div class="tab-content container mt-4">
+  <div class="tab-pane fade show active" id="home" role="tabpanel">
+    <h1>Bem-vindo ao Buscou Achou Comprou!</h1>
+    <p>Encontre as melhores promoções do mercado.</p>
+  </div>
+  <div id="Promoções" class="tab-pane fade show active" role="tabpanel">
+    <main>
+      <div class="product-list" id="productList"></div>
+    </main>
+  </div>
+
+  <div id="Cadastro" class="tab-pane fade" role="tabpanel">
+    <link rel="stylesheet" href="styles/stylecadastro.css">
+    <h3>Cadastro</h3>
+    <div id="cadastroMsg"></div>
+    <form class="mt-3" id="formCadastro">
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome Completo</label>
+        <input type="text" class="form-control" id="nome" name="nome" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">E-mail</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+      </div>
+      <div class="mb-3">
+        <label for="senha" class="form-label">Senha</label>
+        <input type="password" class="form-control" id="senha" name="senha" required>
+      </div>
+      <div class="mb-3">
+        <label for="telefone" class="form-label">Telefone</label>
+        <input type="tel" class="form-control" id="telefone" name="telefone" pattern="[0-9]{10,11}" placeholder="Apenas números" required>
+      </div>
+      <div class="mb-3">
+        <label for="endereco" class="form-label">Endereço</label>
+        <input type="text" class="form-control" id="endereco" name="endereco" required>
+      </div>
+      <div class="mb-3">
+        <label for="cidade" class="form-label">Cidade</label>
+        <input type="text" class="form-control" id="cidade" name="cidade" required>
+      </div>
+      <div class="mb-3">
+        <label for="cpf" class="form-label">CPF</label>
+        <input type="text" class="form-control" id="cpf" name="cpf" pattern="\d{11}" placeholder="Apenas números" required>
+      </div>
+      <div class="mb-3">
+        <label for="rg" class="form-label">RG</label>
+        <input type="text" class="form-control" id="rg" name="rg" required>
+      </div>
+      <div class="mb-3">
+        <label for="genero" class="form-label">Gênero</label>
+        <select class="form-select" id="genero" name="genero" required>
+          <option value="">Selecione</option>
+          <option value="masculino">Masculino</option>
+          <option value="feminino">Feminino</option>
+          <option value="outro">Outro</option>
+          <option value="nao_informar">Prefiro não informar</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="estado_civil" class="form-label">Estado Civil</label>
+        <select class="form-select" id="estado_civil" name="estado_civil" required>
+          <option value="">Selecione</option>
+          <option value="solteiro">Solteiro(a)</option>
+          <option value="casado">Casado(a)</option>
+          <option value="divorciado">Divorciado(a)</option>
+          <option value="viuvo">Viúvo(a)</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="estado" class="form-label">Estado</label>
+        <input type="text" class="form-control" id="estado" name="estado" required>
+      </div>
+      <div class="mb-3">
+        <label for="dataNascimento" class="form-label">Data de Nascimento</label>
+        <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" required>
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="termos" required>
+        <label class="form-check-label" for="termos">Aceito os termos de uso</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+  </div>
+  
+  <div id="Grafico" class="tab-pane fade" role="tabpanel">
+    <p>Media de Promoções.</p>
+    <canvas id="promoChart" width="400" height="200"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const promoData = {
+        labels: ['Frutas', 'Frios', 'Padaria', 'Bebidas', 'Limpeza', 'Higiene', 'Outros'],
+        datasets: [{
+          label: 'Produtos em Promoção',
+          data: [12, 9, 7, 14, 5, 8, 4],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.6)',
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 206, 86, 0.6)',
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(153, 102, 255, 0.6)',
+            'rgba(255, 159, 64, 0.6)',
+            'rgba(100, 200, 100, 0.6)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(100, 200, 100, 1)'
+          ],
+          borderWidth: 1
+        }]
+      };
+
+      const ctx = document.getElementById('promoChart').getContext('2d');
+      const promoChart = new Chart(ctx, {
+        type: 'bar',
+        data: promoData,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: true }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'Quantidade' }
+            },
+            x: {
+              title: { display: true, text: 'Categorias' }
+            }
+          }
+        }
+      });
+    </script>
+  </div>
+
+  <div id="Localização" class="tab-pane fade" role="tabpanel">
+    <p>Nossa localização aqui.</p>
+    <div class="map-responsive" style="overflow:hidden; padding-bottom:56.25%; position:relative; height:0;">
+      <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.161678875968!2d-46.63881668440709!3d-23.52354978470548!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59e6e8e8e8e8%3A0x8e8e8e8e8e8e8e8e!2sMercadão%20Municipal%20de%20São%20Paulo!5e0!3m2!1spt-BR!2sbr!4v1717961234567!5m2!1spt-BR!2sbr"
+      width="100%"
+      height="100%"
+      style="border:0; position:absolute; top:0; left:0;"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+    <p>Rua da Cantareira, 306 - Centro, São Paulo, SP</p>
+  </div>
+
+ <script src="app.js"></script>
+  <footer class="text-center mt-4">
+    <p>&copy; 2025 Buscou Achou Comprou. Todos os direitos reservados.</p>
+  </footer>
+</body>
+</html>
